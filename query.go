@@ -11,10 +11,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/chromedp/cdproto/cdp"
-	"github.com/chromedp/cdproto/css"
-	"github.com/chromedp/cdproto/dom"
-	"github.com/chromedp/cdproto/page"
+	"github.com/jbegley1995/cdproto/cdp"
+	"github.com/jbegley1995/cdproto/css"
+	"github.com/jbegley1995/cdproto/dom"
+	"github.com/jbegley1995/cdproto/page"
 	"github.com/disintegration/imaging"
 )
 

@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/chromedp/cdproto/cdp"
-	"github.com/chromedp/cdproto/css"
-	"github.com/chromedp/cdproto/dom"
-	"github.com/chromedp/chromedp/kb"
+	"github.com/jbegley1995/cdproto/cdp"
+	"github.com/jbegley1995/cdproto/css"
+	"github.com/jbegley1995/cdproto/dom"
+	"github.com/jbegley1995/chromedp/kb"
 )
 
 func TestNodes(t *testing.T) {

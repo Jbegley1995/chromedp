@@ -3,6 +3,7 @@ package chromedp
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"reflect"
 	goruntime "runtime"
@@ -12,16 +13,16 @@ import (
 
 	"github.com/mailru/easyjson"
 
-	"github.com/chromedp/cdproto"
-	"github.com/chromedp/cdproto/cdp"
-	"github.com/chromedp/cdproto/css"
-	"github.com/chromedp/cdproto/dom"
-	"github.com/chromedp/cdproto/inspector"
-	"github.com/chromedp/cdproto/log"
-	"github.com/chromedp/cdproto/page"
-	"github.com/chromedp/cdproto/runtime"
+	"github.com/jbegley1995/cdproto"
+	"github.com/jbegley1995/cdproto/cdp"
+	"github.com/jbegley1995/cdproto/css"
+	"github.com/jbegley1995/cdproto/dom"
+	"github.com/jbegley1995/cdproto/inspector"
+	"github.com/jbegley1995/cdproto/log"
+	"github.com/jbegley1995/cdproto/page"
+	"github.com/jbegley1995/cdproto/runtime"
 
-	"github.com/chromedp/chromedp/client"
+	"github.com/jbegley1995/chromedp/client"
 )
 
 // TargetHandler manages a Chrome Debugging Protocol target.
@@ -174,31 +175,57 @@ func (h *TargetHandler) run(ctxt context.Context) {
 		}
 	}()
 
+	var wg sync.WaitGroup
+	defer wg.Wait()
+
 	// process queues
-	for {
-		select {
-		case ev := <-h.qevents:
-			err := h.processEvent(ctxt, ev)
-			if err != nil {
-				h.errorf("could not process event %s: %v", ev.Method, err)
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		for {
+			select {
+			case ev := <-h.qevents:
+				err := h.processEvent(ctxt, ev)
+				if err != nil {
+					h.errorf("could not process event %s: %v", ev.Method, err)
+				}
+			case <-ctxt.Done():
+				return
 			}
-
-		case res := <-h.qres:
-			err := h.processResult(res)
-			if err != nil {
-				h.errorf("could not process result for message %d: %v", res.ID, err)
-			}
-
-		case cmd := <-h.qcmd:
-			err := h.processCommand(cmd)
-			if err != nil {
-				h.errorf("could not process command message %d: %v", cmd.ID, err)
-			}
-
-		case <-ctxt.Done():
-			return
 		}
-	}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		for {
+			select {
+			case res := <-h.qres:
+				err := h.processResult(res)
+				if err != nil {
+					h.errorf("could not process result for message %d: %v", res.ID, err)
+				}
+			case <-ctxt.Done():
+				return
+			}
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		for {
+			select {
+			case cmd := <-h.qcmd:
+				err := h.processCommand(cmd)
+				if err != nil {
+					h.errorf("could not process command message %d: %v", cmd.ID, err)
+				}
+			case <-ctxt.Done():
+				return
+			}
+		}
+	}()
 }
 
 // read reads a message from the client connection.
@@ -236,13 +263,13 @@ func (h *TargetHandler) processEvent(ctxt context.Context, msg *cdproto.Message)
 	switch e := ev.(type) {
 	case *inspector.EventDetached:
 		h.Lock()
-		defer h.Unlock()
 		h.detached <- e
+		h.Unlock()
 		return nil
 
 	case *dom.EventDocumentUpdated:
 		h.domWaitGroup.Wait()
-		go h.documentUpdated(ctxt)
+		h.documentUpdated(ctxt)
 		return nil
 	}
 
@@ -254,11 +281,11 @@ func (h *TargetHandler) processEvent(ctxt context.Context, msg *cdproto.Message)
 	switch d {
 	case "Page":
 		h.pageWaitGroup.Add(1)
-		go h.pageEvent(ctxt, ev)
+		h.pageEvent(ctxt, ev)
 
 	case "DOM":
 		h.domWaitGroup.Add(1)
-		go h.domEvent(ctxt, ev)
+		h.domEvent(ctxt, ev)
 	}
 
 	return nil
@@ -473,6 +500,11 @@ func (h *TargetHandler) WaitFrame(ctxt context.Context, id cdp.FrameID) (*cdp.Fr
 
 // WaitNode waits for a node to be loaded using the provided context.
 func (h *TargetHandler) WaitNode(ctxt context.Context, f *cdp.Frame, id cdp.NodeID) (*cdp.Node, error) {
+	if id == cdp.EmptyNodeID {
+		// FIXME(rjeczalik): improve event handlng in domEvent, either validate
+		// events or handle edge-cases
+		return nil, errors.New("can't wait on empty node")
+	}
 	// TODO: fix this
 	timeout := time.After(10 * time.Second)
 

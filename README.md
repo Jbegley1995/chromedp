@@ -12,7 +12,7 @@ notice. There are likely extremely bad bugs lurking in this code. **CAVEAT USER*
 Install in the usual way:
 
 ```sh
-go get -u github.com/chromedp/chromedp
+go get -u github.com/jbegley1995/chromedp
 ```
 
 ## Using
@@ -36,8 +36,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/chromedp/cdproto/cdp"
-	"github.com/chromedp/chromedp"
+	"github.com/jbegley1995/cdproto/cdp"
+	"github.com/jbegley1995/chromedp"
 )
 
 func main() {
@@ -106,9 +106,9 @@ Please see the [examples][6] project for more examples. Please refer to the
 * [chromedp: A New Way to Drive the Web][8] - GopherCon SG 2017 talk
 * [Chrome DevTools Protocol][5] - Chrome Debugging Protocol Domain documentation
 * [chromedp examples][6] - various `chromedp` examples
-* [`github.com/chromedp/cdproto`][9] - GoDoc listing for the CDP domains used by `chromedp`
-* [`github.com/chromedp/chromedp-gen`][10] - tool used to generate `cdproto`
-* [`github.com/chromedp/chromedp-proxy`][11] - a simple CDP proxy for logging/debugging CDP clients and browser instances
+* [`github.com/jbegley1995/cdproto`][9] - GoDoc listing for the CDP domains used by `chromedp`
+* [`github.com/jbegley1995/chromedp-gen`][10] - tool used to generate `cdproto`
+* [`github.com/jbegley1995/chromedp-proxy`][11] - a simple CDP proxy for logging/debugging CDP clients and browser instances
 
 ## TODO
 
@@ -123,9 +123,9 @@ Please see the [examples][6] project for more examples. Please refer to the
 [3]: https://coveralls.io/repos/chromedp/chromedp/badge.svg?branch=master&service=github
 [4]: https://coveralls.io/github/chromedp/chromedp?branch=master
 [5]: https://chromedevtools.github.io/devtools-protocol/
-[6]: https://github.com/chromedp/examples
-[7]: https://godoc.org/github.com/chromedp/chromedp
+[6]: https://github.com/jbegley1995/examples
+[7]: https://godoc.org/github.com/jbegley1995/chromedp
 [8]: https://www.youtube.com/watch?v=_7pWCg94sKw
-[9]: https://godoc.org/github.com/chromedp/cdproto
-[10]: https://github.com/chromedp/chromedp-gen
-[11]: https://github.com/chromedp/chromedp-proxy
+[9]: https://godoc.org/github.com/jbegley1995/cdproto
+[10]: https://github.com/jbegley1995/chromedp-gen
+[11]: https://github.com/jbegley1995/chromedp-proxy

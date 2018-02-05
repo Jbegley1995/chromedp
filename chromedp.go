@@ -14,24 +14,24 @@ import (
 	"sync"
 	"time"
 
-	"github.com/chromedp/cdproto/cdp"
-	"github.com/chromedp/chromedp/client"
-	"github.com/chromedp/chromedp/runner"
+	"github.com/jbegley1995/cdproto/cdp"
+	"github.com/jbegley1995/chromedp/client"
+	"github.com/jbegley1995/chromedp/runner"
 )
 
 const (
 	// DefaultNewTargetTimeout is the default time to wait for a new target to
 	// be started.
-	DefaultNewTargetTimeout = 3 * time.Second
+	DefaultNewTargetTimeout = 30 * time.Second
 
 	// DefaultCheckDuration is the default time to sleep between a check.
 	DefaultCheckDuration = 50 * time.Millisecond
 
 	// DefaultPoolStartPort is the default start port number.
-	DefaultPoolStartPort = 9000
+	DefaultPoolStartPort = 10000
 
 	// DefaultPoolEndPort is the default end port number.
-	DefaultPoolEndPort = 10000
+	DefaultPoolEndPort = 11000
 )
 
 // CDP contains information for managing a Chrome process runner, low level
