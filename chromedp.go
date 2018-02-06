@@ -22,16 +22,16 @@ import (
 const (
 	// DefaultNewTargetTimeout is the default time to wait for a new target to
 	// be started.
-	DefaultNewTargetTimeout = 30 * time.Second
+	DefaultNewTargetTimeout = 3 * time.Second
 
 	// DefaultCheckDuration is the default time to sleep between a check.
 	DefaultCheckDuration = 50 * time.Millisecond
 
 	// DefaultPoolStartPort is the default start port number.
-	DefaultPoolStartPort = 10000
+	DefaultPoolStartPort = 9000
 
 	// DefaultPoolEndPort is the default end port number.
-	DefaultPoolEndPort = 11000
+	DefaultPoolEndPort = 10000
 )
 
 // CDP contains information for managing a Chrome process runner, low level
