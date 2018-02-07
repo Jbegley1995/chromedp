@@ -63,7 +63,7 @@ func (s *Selector) Do(ctxt context.Context, h cdp.Executor) error {
 	}
 
 	// TODO: fix this
-	ctxt, cancel := context.WithTimeout(ctxt, 1*time.Hour)
+	ctxt, cancel := context.WithTimeout(ctxt, 15*time.Minute)
 	defer cancel()
 
 	var err error
